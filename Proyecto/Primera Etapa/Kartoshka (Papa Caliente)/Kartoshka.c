@@ -15,7 +15,6 @@ typedef struct
 {
     size_t total;
     size_t token; //Value
-    size_t start;
     size_t lastOne;
     size_t gameOver;
     pthread_mutex_t mutex;
@@ -79,7 +78,6 @@ int main(int argc, char *argv[])
     {
         thread_data_list[i].id = i;
         thread_data_list[i].shared_data = shared_data;
-        thread_data_list[i].shared_data->start = init; //The thread who start is known by all the threads
         thread_data_list[i].local_token = item;
         thread_data_list[i].shared_data->gameOver = 0;
         thread_data_list[i].alive = 1; //In the first round, all the players are alive

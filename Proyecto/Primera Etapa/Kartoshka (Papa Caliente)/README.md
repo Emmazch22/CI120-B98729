@@ -3,22 +3,28 @@
 Autor: Emmanuel Zúñiga Chaves
 Carné: B98729
 
-##Pre requisitos##
+## Pre requisitos
 
 Para la compilación y ejecución del fichero .c es necesario contar con Pthreads, para ello se puede utilizar el siguiente comando:
 
-`$ sudo apt-get install libpthread-stubs0-dev `
+```
+$ sudo apt-get install libpthread-stubs0-dev 
+```
 
-##Compilación
+## Compilación
 
 Para la compilación del fichero .c basta con ejecutar el comando: 
 
-`$ gcc -Wall Kartoshka.c -o kartoshka -pthread`
+```
+$ gcc -Wall Kartoshka.c -o kartoshka -pthread
+```
 
 o bien, usar el comando:
-`$ make`
+```
+$ make
+```
 
-##Ejecución
+## Ejecución
 
 Para la ejecución del programa se debe de ingresar el siguiente comando:
 
@@ -31,11 +37,13 @@ Donde:
 - *s* sentido de rotación.
 
 Por ejemplo:
-`$ ./kartoshka 5 10 -1`
+```
+$ ./kartoshka 5 10 -1
+```
 
 En este caso, la simulación del juego se haría con 10 hilos, estableciendo un valor inicial de 10 y un sentido de rotación a la derecha (-1).
 
-##Pruebas
+## Pruebas
 
 A continuación se presenta una prueba de ejecución:
 ```

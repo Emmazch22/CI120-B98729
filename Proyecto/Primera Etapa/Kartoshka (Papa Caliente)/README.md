@@ -41,7 +41,7 @@ Por ejemplo:
 $ ./kartoshka 5 10 -1
 ```
 
-En este caso, la simulación del juego se haría con 10 hilos, estableciendo un valor inicial de 10 y un sentido de rotación a la derecha (-1).
+En este caso, la simulación del juego se haría con 5 hilos, estableciendo un valor inicial de 10 y un sentido de rotación a la derecha (-1).
 
 ## Pruebas
 
@@ -70,3 +70,5 @@ Thread # 1 changing the token value to 1
 Thread # 1 has left the game.
 The winner is thread # 1.
 ```
+
+NOTA: En este caso el acceso a la salida estandar (printf) no sigue ningún orden en especifico. No obstante, internamente los hilos cambian el valor de la papa siguiendo el sentido de rotación especificado. Por lo tanto, la salida en consola no es un indicativo del orden tomado por los hilos.

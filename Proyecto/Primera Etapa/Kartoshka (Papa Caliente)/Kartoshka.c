@@ -61,6 +61,9 @@ int main(int argc, char *argv[])
 
     thread_data_t *thread_data_list = (thread_data_t *)malloc((size_t)(thread_count * sizeof(thread_data_t)));
 
+    /* Mutex init */
+    pthread_mutex_init(&shared_data->mutex, NULL);
+
     srand(time(NULL));
     init = random() % thread_count;
     item = random() & value;

@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
     size_t strategyTwo;
     size_t algorithm;
     string file;
-
     if (argc > 7)
     {
         sets = (size_t)strtoul(argv[1], NULL, 10);
@@ -64,8 +63,8 @@ int main(int argc, char *argv[])
         cout << "Usage: ./simulator.out <sets> <blocks> <bytes> <strategy one> <strategy two> <remplacement algorithm> <file>" << endl;
         exit(0);
     }
-
     Simulator simulator(sets, blocks, k_bytes, strategyOne, strategyTwo, algorithm, file);
+    simulator.run();
 
     return 0;
 }

@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -15,13 +16,19 @@ class Simulator {
         size_t cache_type;
         size_t instruction_type;
         std::string file;
+        std::vector <std::string> tokens;
+        std::vector <std::string> instruction_operations;
         void setCacheType(size_t, size_t);
         void readFromFile(std::string);
         void separateInstruction(std::vector <std::string>);
+        std::string hexToBinary(char);
+
         //Cache cache;
     public:
         Simulator();
         Simulator(size_t, size_t, size_t, size_t, size_t, size_t, std::string);
         ~Simulator();
         size_t getCacheType();
+        void run();
+        
 };

@@ -3,19 +3,20 @@
 #include <string.h>
 #include <math.h>
 #include <fstream>
+#include "include/Simulator.h"
 using namespace std;
 
-const char *write_allocate = "write-allocate";
-const char *no_write_allocate = "no-write-allocate";
-const char *write_through = "write-through";
-const char *write_back = "write-back";
-const char *least_recently_used = "lru";
-const char *first_in_first_out = "fifo";
-const char *random_s = "random";
+string write_allocate = "write-allocate";
+string no_write_allocate = "no-write-allocate";
+string write_through = "write-through";
+string write_back = "write-back";
+string least_recently_used = "lru";
+string first_in_first_out = "fifo";
+string random_s = "random";
 
 bool isPowerOfTwo(size_t);
-size_t getStrategy(const char *);
-size_t getAlgorithm(const char *);
+size_t getStrategy(string);
+size_t getAlgorithm(string);
 
 int main(int argc, char *argv[])
 {
@@ -64,7 +65,7 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    //Simulator(parametros blablabla);
+    Simulator simulator(sets, blocks, k_bytes, strategyOne, strategyTwo, algorithm, file);
 
     return 0;
 }
@@ -78,40 +79,40 @@ bool isPowerOfTwo(size_t n)
     return (ceil(log2(n)) == floor(log2(n)));
 }
 
-size_t getStrategy(const char *strategy)
+size_t getStrategy(string strategy)
 {
     size_t result = -1;
-    if (strcmp(strategy, no_write_allocate) == 0)
+    if ( strategy.compare(no_write_allocate) == 0)
     {
         result = 0;
     }
-    else if (strcmp(strategy, write_allocate) == 0)
+    else if ( strategy.compare(write_allocate) == 0)
     {
         result = 1;
     }
-    else if (strcmp(strategy, write_through) == 0)
+    else if ( strategy.compare(write_through) == 0)
     {
         result = 2;
     }
-    else if (strcmp(strategy, write_back) == 0)
+    else if ( strategy.compare(write_back) == 0)
     {
         result = 3;
     }
     return result;
 }
 
-size_t getAlgorithm(const char *algorithm)
+size_t getAlgorithm(string algorithm)
 {
     size_t result = -1;
-    if ( strcmp(algorithm, least_recently_used) == 0)
+    if ( algorithm.compare(least_recently_used) == 0)
     {
         result = 0;
     }
-    else if ( strcmp(algorithm, first_in_first_out) == 0)
+    else if ( algorithm.compare(first_in_first_out) == 0)
     {
         result = 1;
     }
-    else if ( strcmp(algorithm, random_s) == 0)
+    else if ( algorithm.compare(random_s) == 0)
     {
         result = 2;
     }

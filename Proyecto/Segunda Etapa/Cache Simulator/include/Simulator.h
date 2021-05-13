@@ -1,4 +1,5 @@
 #pragma once
+#include "Cache.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -7,6 +8,7 @@
 
 class Simulator {
     private:
+        Cache * cache;
         size_t sets;
         size_t blocks;
         size_t k_bytes;
@@ -22,8 +24,6 @@ class Simulator {
         void readFromFile(std::string);
         void separateInstruction(std::vector <std::string>);
         std::string hexToBinary(char);
-
-        //Cache cache;
     public:
         Simulator();
         Simulator(size_t, size_t, size_t, size_t, size_t, size_t, std::string);

@@ -9,10 +9,15 @@ Simulator::Simulator(size_t sets, size_t blocks, size_t k_bytes, size_t strategy
     this->k_bytes = k_bytes;
     this->strategy_one = strategy_one;
     this->strategy_two = strategy_two;
-    this->file = file;    
+    this->file = file;
+    this->cache = new Cache(sets, blocks);
+    this->cache->setType(getCacheType());
 }
 
-Simulator::~Simulator() {}
+Simulator::~Simulator() 
+{
+    delete this->cache;
+}
 
 void Simulator::setCacheType(size_t sets, size_t blocks)
 {
@@ -59,7 +64,6 @@ void Simulator::readFromFile(std::string file)
         std::cout << "Error, invalid instruction type. Must be l or r" << std::endl;
         exit(0);
     }
-    
 }
 
 void Simulator::separateInstruction(std::vector<std::string> tokens)
@@ -67,11 +71,13 @@ void Simulator::separateInstruction(std::vector<std::string> tokens)
     char instructions_bytes[8];
     std::vector<char> aux_vector(tokens[1].begin() + 2, tokens[1].end());
 
-    for (size_t i = 0; i < 8; ++i){
+    for (size_t i = 0; i < 8; ++i)
+    {
         instructions_bytes[i] = aux_vector[i];
     }
 
-    for (size_t i = 0; i < 8; ++i){
+    for (size_t i = 0; i < 8; ++i)
+    {
         this->instruction_operations.push_back(hexToBinary(instructions_bytes[i]));
     }
 }
@@ -143,7 +149,8 @@ std::string Simulator::hexToBinary(char hex)
     return result;
 }
 
-void Simulator::run(){
+void Simulator::run()
+{
     setCacheType(this->sets, this->blocks);
     readFromFile(this->file);
     separateInstruction(this->tokens);

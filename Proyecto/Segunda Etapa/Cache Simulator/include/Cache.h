@@ -15,7 +15,7 @@ class Cache {
         size_t type;
         size_t sets;
         size_t blocks;
-        void distributeBlocks(size_t, size_t);
+        void init(size_t, size_t);
         set_t * set;
     public:
         Cache();

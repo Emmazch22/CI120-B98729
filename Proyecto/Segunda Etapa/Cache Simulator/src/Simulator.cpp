@@ -24,12 +24,7 @@ void Simulator::setCacheType(size_t sets, size_t blocks)
     if (sets >= 1 && blocks == 1)
     {
         this->cache_type = 0; /* direct-mapped */
-    }
-    else if (sets >= 1 && blocks >= 1)
-    {
-        this->cache_type = 1; /* m-way set-associative */
-    }
-    else if (sets == 1 && blocks >= 1)
+    } else if (sets == 1 && blocks >= 1)
     {
         this->cache_type = 2; /* fully-asociative */
     }

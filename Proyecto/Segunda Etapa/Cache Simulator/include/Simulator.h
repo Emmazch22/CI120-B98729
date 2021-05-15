@@ -17,16 +17,18 @@ class Simulator {
         size_t algorithm;
         size_t cache_type;
         size_t instruction_type;
+        size_t access_time;
+        size_t next_level_access;
         std::string file;
         std::vector <std::string> tokens;
         std::vector <std::string> instruction_operations;
         void setCacheType(size_t, size_t);
-        void readFromFile(std::string);
+        void readFromFile();
         void separateInstruction(std::vector <std::string>);
         std::string hexToBinary(char);
     public:
         Simulator();
-        Simulator(size_t, size_t, size_t, size_t, size_t, size_t, std::string);
+        Simulator(size_t, size_t, size_t, size_t, size_t, size_t, size_t , size_t, std::string);
         ~Simulator();
         size_t getCacheType();
         void run();

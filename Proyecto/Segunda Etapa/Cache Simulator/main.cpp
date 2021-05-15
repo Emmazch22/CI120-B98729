@@ -26,6 +26,8 @@ int main(int argc, char *argv[])
     size_t strategyOne;
     size_t strategyTwo;
     size_t algorithm;
+    size_t access_time;
+    size_t next_level_access;
     string file;
     if (argc > 7)
     {
@@ -55,15 +57,17 @@ int main(int argc, char *argv[])
             strategyTwo = getStrategy(argv[5]);
         }
         algorithm = getAlgorithm(argv[6]);
-        file = string(argv[7]);
+        access_time = (size_t)strtoul(argv[7], NULL, 10);
+        next_level_access = (size_t)strtoul(argv[8], NULL, 10);
+        file = string(argv[9]);
     }
     else
     {
         cout << "Error, Invalid number of parameters." << endl;
-        cout << "Usage: ./simulator.out <sets> <blocks> <bytes> <strategy one> <strategy two> <remplacement algorithm> <file>" << endl;
+        cout << "Usage: ./simulator.out <sets> <blocks> <bytes> <strategy one> <strategy two> <replacement algorithm> <access time (cycles)> <next level access time(cyles)> <file>" << endl;
         exit(0);
     }
-    Simulator simulator(sets, blocks, k_bytes, strategyOne, strategyTwo, algorithm, file);
+    Simulator simulator(sets, blocks, k_bytes, strategyOne, strategyTwo, algorithm, access_time, next_level_access,file);
     simulator.run();
 
     return 0;

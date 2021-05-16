@@ -5,6 +5,7 @@
 #include <vector>
 #include <unistd.h>
 #include <string.h>
+#include <math.h>
 
 class Simulator {
     private:
@@ -21,16 +22,25 @@ class Simulator {
         size_t next_level_access;
         std::string file;
         std::vector <std::string> tokens;
-        std::vector <std::string> instruction_operations;
+        std::vector <std::string> instructions;
+        std::vector <std::string> binary_instructions; 
+        std::vector <size_t> instruction_operations;
+        std::vector <std::string> offsets;
+        std::vector <size_t> indexes;
+        std::vector <size_t> tags; 
         void setCacheType(size_t, size_t);
         void readFromFile();
-        void separateInstruction(std::vector <std::string>);
+        void separateInstruction();
+        void processInstruction();
+        size_t binaryToDec(std::string);
         std::string hexToBinary(char);
+
     public:
         Simulator();
         Simulator(size_t, size_t, size_t, size_t, size_t, size_t, size_t , size_t, std::string);
         ~Simulator();
         size_t getCacheType();
+        void print_Results();
         void run();
         
 };

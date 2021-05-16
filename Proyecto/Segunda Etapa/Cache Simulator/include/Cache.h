@@ -3,7 +3,8 @@
 
 typedef struct {
     size_t tag;
-    std::string byte;
+    bool dirty = 0;
+    std::string data;
 } block_t;
 
 typedef struct {

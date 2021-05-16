@@ -2,7 +2,7 @@
 
 Simulator::Simulator() {}
 
-Simulator::Simulator(size_t sets, size_t blocks, size_t k_bytes, size_t strategy_one, size_t strategy_two, size_t algorithm, size_t access_time, size_t next_level_access ,std::string file)
+Simulator::Simulator(size_t sets, size_t blocks, size_t k_bytes, size_t strategy_one, size_t strategy_two, size_t algorithm, size_t access_time, size_t next_level_access, std::string file)
 {
     this->sets = sets;
     this->blocks = blocks;
@@ -16,7 +16,7 @@ Simulator::Simulator(size_t sets, size_t blocks, size_t k_bytes, size_t strategy
     this->cache->setType(getCacheType());
 }
 
-Simulator::~Simulator() 
+Simulator::~Simulator()
 {
     //delete this->cache;
 }
@@ -26,7 +26,8 @@ void Simulator::setCacheType(size_t sets, size_t blocks)
     if (sets >= 1 && blocks == 1)
     {
         this->cache_type = 0; /* direct-mapped */
-    } else if (sets == 1 && blocks >= 1)
+    }
+    else if (sets == 1 && blocks >= 1)
     {
         this->cache_type = 2; /* fully-asociative */
     }
@@ -42,44 +43,67 @@ void Simulator::readFromFile()
     std::string temp;
     std::ifstream readFile(this->file);
 
-    while ( getline(readFile, temp))
+    while (getline(readFile, temp))
     {
         this->tokens.push_back(temp);
     }
-
-    for (auto value: this->tokens){
-        std::cout << value << std::endl;
-    }
-
-
-/*     if ( (this->tokens[0].compare("l") == 0) || (this->tokens[0].compare("L") == 0) )
-    {
-        this->instruction_type = 0;
-    }
-    else if ( (this->tokens[0].compare("s") == 0) || (this->tokens[0].compare("S") == 0) )
-    {
-        this->instruction_type = 1;
-    }
-    else
-    {
-        std::cout << "Error, invalid instruction type. Must be l or r" << std::endl;
-        exit(0);
-    } */
 }
 
-void Simulator::separateInstruction(std::vector<std::string> tokens)
+void Simulator::separateInstruction()
 {
-    char instructions_bytes[8];
-    std::vector<char> aux_vector(tokens[1].begin() + 2, tokens[1].end());
+    std::string temp = "";
+    size_t first_blank;
+    size_t first_comma;
 
-    for (size_t i = 0; i < 8; ++i)
+    //Separates only the instruction and saves them into a new vector
+    for (auto value : this->tokens)
     {
-        instructions_bytes[i] = aux_vector[i];
+        first_blank = value.find_first_of(' ');
+        first_comma = value.find_first_of(',');
+        temp = value.substr(first_blank + 1, first_comma - 2);
+        this->instructions.push_back(temp);
+    }
+}
+
+void Simulator::processInstruction()
+{
+    size_t offset_size;
+    size_t index_size;
+    size_t tag_size;
+    size_t counter = 0;
+    std::string temp = "";
+    //Getting the operations of the instruction, and saving them into a vector
+    for (auto value : this->tokens)
+    {
+        if (value.at(0) == 'L' || value.at(0) == 'L')
+        {
+            this->instruction_operations.push_back(0);
+        }
+        else if (value.at(0) == 'S' || value.at(0) == 's')
+        {
+            this->instruction_operations.push_back(1);
+        }
     }
 
-    for (size_t i = 0; i < 8; ++i)
+    //Convert the instruction into 32 bits string
+    for (auto value : this->instructions)
     {
-        this->instruction_operations.push_back(hexToBinary(instructions_bytes[i]));
+        for (size_t i = 0; i < value.length(); ++i)
+        {
+            temp += hexToBinary(value.at(i));
+        }
+        this->binary_instructions.push_back(temp);
+        temp = "";
+    }
+
+    offset_size = log2(this->k_bytes);
+    index_size = log2(this->sets);
+    tag_size = 32 - offset_size - index_size;
+
+    for (auto value : this->binary_instructions){
+        this->offsets.push_back(value.substr(value.length() - offset_size, value.length()));
+        this->tags.push_back(binaryToDec(value.substr(0, tag_size)));
+        this->indexes.push_back(binaryToDec(value.substr(tag_size, index_size)));
     }
 }
 
@@ -150,9 +174,25 @@ std::string Simulator::hexToBinary(char hex)
     return result;
 }
 
+size_t Simulator::binaryToDec(std::string binary){
+    return (size_t)stoi(binary, 0, 2);
+}
+
 void Simulator::run()
 {
     setCacheType(this->sets, this->blocks);
     readFromFile();
-    //separateInstruction(this->tokens);
+    separateInstruction();
+    processInstruction();
+    print_Results();
+    //separateInstruction();
+}
+
+void Simulator::print_Results()
+{
+    std::cout << "Instructions \t Cycles \t Events" << std::endl;
+    for (auto value : this->tokens)
+    {
+        std::cout << value << std::endl;
+    }
 }

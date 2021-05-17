@@ -3,25 +3,21 @@
 
 typedef struct {
     size_t tag;
-    bool dirty = 0;
-    std::string data;
+    size_t dirty;
+    size_t data;
 } block_t;
-
-typedef struct {
-    block_t * block;
-} set_t;
-
 class Cache {
     private:
         size_t type;
         size_t sets;
         size_t blocks;
-        void init(size_t, size_t);
-        set_t * set;
+        block_t * cache;
     public:
         Cache();
         Cache(size_t, size_t);
         ~Cache();
         void setType(size_t);
+        size_t getSet(size_t);
         size_t getType();
+        void writeData(size_t, size_t);
 };

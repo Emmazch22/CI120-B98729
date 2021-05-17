@@ -11,17 +11,13 @@ Cache::Cache(size_t sets, size_t blocks)
 {
     this->sets = sets;
     this->blocks = blocks;
-    this->set = new set_t[sets];
-    init(sets, blocks);
+    this->cache = new block_t[sets];
 }
 
 Cache::~Cache()
 {
-    delete[] this->set;
-    for (size_t i = 0; i < this->sets; ++i)
-    {
-        delete[] this->set[i].block;
-    }
+    delete[] this->cache;
+
 }
 
 void Cache::setType(size_t)
@@ -34,15 +30,16 @@ size_t Cache::getType()
     return this->type;
 }
 
-void Cache::init(size_t sets, size_t blocks)
-{
-    size_t result = 0;
-    if (getType() == 0)
-    {
-        this->set->block = new block_t[1];
+size_t Cache::getSet(size_t block){
+    size_t set;
+    if ( getType() == 0){
+        set = block;
+    } else if ( getType() == 1){
+        set = 1;
     }
-    else if (getType() == 2)
-    {
-        this->set->block = new block_t[blocks];
-    }
+    return set;
+}
+
+void Cache::writeData(size_t tag, size_t index){
+
 }

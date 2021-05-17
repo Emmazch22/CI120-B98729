@@ -11,14 +11,25 @@ Simulator::Simulator(size_t sets, size_t blocks, size_t k_bytes, size_t strategy
     this->strategy_two = strategy_two;
     this->access_time = access_time;
     this->next_level_access = next_level_access;
+    this->hits = 0;
+    this->misses = 0;
+    this->total_cycles = 0;
+    this->total_instructions = 0;
     this->file = file;
     this->cache = new Cache(sets, blocks);
     this->cache->setType(getCacheType());
+    this->main_memory = new Main_Memory(blocks);
 }
 
 Simulator::~Simulator()
 {
-    //delete this->cache;
+    this->tokens.clear();
+    this->instructions.clear();
+    this->binary_instructions.clear();
+    this->instruction_operations.clear();
+    this->offsets.clear();
+    this->indexes.clear();
+    this->tags.clear();
 }
 
 void Simulator::setCacheType(size_t sets, size_t blocks)
@@ -47,6 +58,7 @@ void Simulator::readFromFile()
     {
         this->tokens.push_back(temp);
     }
+    this->total_instructions = this->tokens.size();
 }
 
 void Simulator::separateInstruction()
@@ -95,12 +107,13 @@ void Simulator::processInstruction()
         this->binary_instructions.push_back(temp);
         temp = "";
     }
-
+    //Divide the 32 bit string into tag, index and offset
     offset_size = log2(this->k_bytes);
     index_size = log2(this->sets);
     tag_size = 32 - offset_size - index_size;
 
-    for (auto value : this->binary_instructions){
+    for (auto value : this->binary_instructions)
+    {
         this->offsets.push_back(value.substr(value.length() - offset_size, value.length()));
         this->tags.push_back(binaryToDec(value.substr(0, tag_size)));
         this->indexes.push_back(binaryToDec(value.substr(tag_size, index_size)));
@@ -174,7 +187,33 @@ std::string Simulator::hexToBinary(char hex)
     return result;
 }
 
-size_t Simulator::binaryToDec(std::string binary){
+void Simulator::write()
+{
+    if (getCacheType() == 0)
+    {
+        //Direct Mapping
+        directMappedWrite();
+    }
+    else if (getCacheType() == 1)
+    {
+        //Fully Associative
+        fullyAssociativeWrite();
+    }
+}
+
+void Simulator::directMappedWrite()
+{
+    for (size_t i = 0; i < this->total_instructions; ++i){
+        
+    }
+}
+
+void Simulator::fullyAssociativeWrite()
+{
+}
+
+size_t Simulator::binaryToDec(std::string binary)
+{
     return (size_t)stoi(binary, 0, 2);
 }
 

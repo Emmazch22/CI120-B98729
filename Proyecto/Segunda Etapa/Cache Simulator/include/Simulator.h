@@ -1,5 +1,6 @@
 #pragma once
 #include "Cache.h"
+#include "Main_Memory.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -10,6 +11,7 @@
 class Simulator {
     private:
         Cache * cache;
+        Main_Memory * main_memory;
         size_t sets;
         size_t blocks;
         size_t k_bytes;
@@ -20,6 +22,11 @@ class Simulator {
         size_t instruction_type;
         size_t access_time;
         size_t next_level_access;
+        size_t misses;
+        size_t hits;
+        size_t total_cycles;
+        size_t evictions;
+        size_t total_instructions;
         std::string file;
         std::vector <std::string> tokens;
         std::vector <std::string> instructions;
@@ -32,6 +39,8 @@ class Simulator {
         void readFromFile();
         void separateInstruction();
         void processInstruction();
+        void directMappedWrite();
+        void fullyAssociativeWrite();
         size_t binaryToDec(std::string);
         std::string hexToBinary(char);
 
@@ -41,6 +50,7 @@ class Simulator {
         ~Simulator();
         size_t getCacheType();
         void print_Results();
+        void write();
         void run();
         
 };

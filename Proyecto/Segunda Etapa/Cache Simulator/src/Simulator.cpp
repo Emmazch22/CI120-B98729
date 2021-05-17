@@ -32,6 +32,11 @@ Simulator::~Simulator()
     this->tags.clear();
 }
 
+/**
+ * @brief Set the placement policie of the cache
+ * @param sets amount of sets in the cache 
+ * @param blocks amount of blocks in the cache
+ */
 void Simulator::setCacheType(size_t sets, size_t blocks)
 {
     if (sets >= 1 && blocks == 1)
@@ -43,12 +48,17 @@ void Simulator::setCacheType(size_t sets, size_t blocks)
         this->cache_type = 2; /* fully-asociative */
     }
 }
-
+/**
+ * @brief returns the placement police of the cache
+ * @return 0 for direct mapped, 1 for fully asociative
+ */
 size_t Simulator::getCacheType()
 {
     return this->cache_type;
 }
-
+/**
+ * @brief read the input file and copy the instructions into a vector
+ */
 void Simulator::readFromFile()
 {
     std::string temp;
@@ -60,7 +70,9 @@ void Simulator::readFromFile()
     }
     this->total_instructions = this->tokens.size();
 }
-
+/**
+ * @brief separates the instruction into the operant (l or s) and the 32 bit string
+ */
 void Simulator::separateInstruction()
 {
     std::string temp = "";
@@ -77,6 +89,9 @@ void Simulator::separateInstruction()
     }
 }
 
+/**
+ * @brief process the instruction to get the type (Load or Store) and the tag, index and offset of the 32 bit string
+ */
 void Simulator::processInstruction()
 {
     size_t offset_size;
@@ -120,6 +135,11 @@ void Simulator::processInstruction()
     }
 }
 
+/**
+ * @brief convert a hexadecimal character to a 4 bits string
+ * @param hex the hexadecimal character
+ * @return the 4 bits string
+ */
 std::string Simulator::hexToBinary(char hex)
 {
     std::string result = "";
@@ -187,6 +207,9 @@ std::string Simulator::hexToBinary(char hex)
     return result;
 }
 
+/**
+ * @brief depending of the placement policy of the cache, this select the correspondent method
+ */
 void Simulator::write()
 {
     if (getCacheType() == 0)
@@ -201,22 +224,35 @@ void Simulator::write()
     }
 }
 
+/**
+ * @brief writes into the cache using the direct mapped policy
+ */
 void Simulator::directMappedWrite()
 {
     for (size_t i = 0; i < this->total_instructions; ++i){
         
     }
 }
-
+/**
+ * @brief writes into the cache using the fully asociative policy
+ */
 void Simulator::fullyAssociativeWrite()
 {
 }
 
+/**
+ * @brief convert a binary string to a integer
+ * @param binary the binary string to convert
+ * @return the decimal corresponding to the string
+ */
 size_t Simulator::binaryToDec(std::string binary)
 {
     return (size_t)stoi(binary, 0, 2);
 }
 
+/**
+ * @brief executes all the functions necessaries to simulate the cache
+ */
 void Simulator::run()
 {
     setCacheType(this->sets, this->blocks);
@@ -227,6 +263,9 @@ void Simulator::run()
     //separateInstruction();
 }
 
+/**
+ * @brief prints using the results using the standart output 
+ */
 void Simulator::print_Results()
 {
     std::cout << "Instructions \t Cycles \t Events" << std::endl;

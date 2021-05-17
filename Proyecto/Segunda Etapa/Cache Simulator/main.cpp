@@ -1,3 +1,10 @@
+/** 
+ * @brief Simulator of a cache
+ * 
+ * @author Emmanuel Zúñiga Chaves - B98729
+ * Contact: emmanuel.zunigachaves@ucr.ac.cr
+*/
+
 #include <iostream>
 #include <unistd.h>
 #include <string.h>
@@ -73,6 +80,11 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+/**
+ * @brief determinated if a number is a power of two
+ * @param  n the number to evaluate
+ * @return 0 if is not a power of two, 1 if it is
+ */
 bool isPowerOfTwo(size_t n)
 {
     if (n <= 0)
@@ -82,6 +94,11 @@ bool isPowerOfTwo(size_t n)
     return (ceil(log2(n)) == floor(log2(n)));
 }
 
+/**
+ * @brief compare the string with the name of the strategies 
+ * @param strategy a string to determinate which strategy the cache will use
+ * @return a number related to the strategy
+ */
 size_t getStrategy(string strategy)
 {
     size_t result = -1;
@@ -104,6 +121,11 @@ size_t getStrategy(string strategy)
     return result;
 }
 
+/**
+ * @brief compare the string with the name of the replacement algorithms 
+ * @param algorithm a string to determinate which replacement algorithm the cache will use
+ * @return a number related to the algorithm
+ */
 size_t getAlgorithm(string algorithm)
 {
     size_t result = -1;

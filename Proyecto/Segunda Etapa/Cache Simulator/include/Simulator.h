@@ -33,8 +33,10 @@ class Simulator {
         std::vector <std::string> binary_instructions; 
         std::vector <size_t> instruction_operations;
         std::vector <std::string> offsets;
-        std::vector <size_t> indexes;
-        std::vector <size_t> tags; 
+        std::vector <std::string> indexes;
+        std::vector <std::string> tags;
+        std::vector <std::string> events; 
+        std::vector <size_t> cycles_per_instruction;
         void setCacheType(size_t, size_t);
         void readFromFile();
         void separateInstruction();

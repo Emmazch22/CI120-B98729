@@ -5,13 +5,15 @@ Cache::Cache()
 {
     this->type = 0;
     this->blocks = 0;
+    this->size = 0;
 }
 
 Cache::Cache(size_t sets, size_t blocks)
 {
     this->sets = sets;
     this->blocks = blocks;
-    this->cache = new block_t[sets];
+    this->size = sets * blocks;
+    this->cache = new block_t[size];
 }
 
 Cache::~Cache()
@@ -53,6 +55,28 @@ size_t Cache::getSet(size_t block){
     return set;
 }
 
-void Cache::writeData(size_t tag, size_t index){
+bool Cache::searchInCache(std::string data){
+    bool exists = 0;
+    for (size_t i = 0; i < this->size; ++i){
+        if ( data.compare(this->cache[i].tag) ){
+            exists = 1;
+        }
+    }
+    return exists;
+}
 
+bool Cache::isDirty(size_t index){
+    return this->cache[index].dirty == 1;
+}
+
+bool Cache::isValid(size_t index){
+    return this->cache[index].valid == 1;
+}
+
+void Cache::writeData(std::string tag, size_t index){
+    this->cache[index].tag = tag;
+}
+
+std::string Cache::getTag(size_t index){
+    return this->cache[index].tag;
 }

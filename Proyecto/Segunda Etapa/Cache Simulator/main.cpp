@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     size_t access_time;
     size_t next_level_access;
     string file;
-    if (argc > 7)
+    if (argc > 9)
     {
         sets = (size_t)strtoul(argv[1], NULL, 10);
         blocks = (size_t)strtoul(argv[2], NULL, 10);

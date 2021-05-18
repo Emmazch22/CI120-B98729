@@ -130,8 +130,8 @@ void Simulator::processInstruction()
     for (auto value : this->binary_instructions)
     {
         this->offsets.push_back(value.substr(value.length() - offset_size, value.length()));
-        this->tags.push_back(binaryToDec(value.substr(0, tag_size)));
-        this->indexes.push_back(binaryToDec(value.substr(tag_size, index_size)));
+        this->tags.push_back(value.substr(0, tag_size));
+        this->indexes.push_back(value.substr(tag_size, index_size));
     }
 }
 
@@ -229,8 +229,59 @@ void Simulator::write()
  */
 void Simulator::directMappedWrite()
 {
-    for (size_t i = 0; i < this->total_instructions; ++i){
-        
+    size_t numerical_index = -1;
+    for (size_t i = 0; i != this->instruction_operations.size(); ++i)
+    {
+        //If this operation is Load
+        numerical_index = binaryToDec(this->indexes[i]);
+
+        if (this->instruction_operations[i] == 0)
+        {
+            if (this->cache->isValid(numerical_index) == 0)
+            {
+                this->misses++;
+                this->total_cycles++;
+                this->events.push_back("Miss");
+                this->cache->writeData(this->tags[i], numerical_index);
+                this->cycles_per_instruction.push_back(this->next_level_access + this->access_time);
+            }
+            else
+            {
+                if (this->tags[i].compare(this->cache->getTag(numerical_index)) != 0)
+                {
+                    this->events.push_back("Miss");
+                    this->misses++;
+                    this->total_cycles++;
+                    //replaces the tag at the cache index
+                    this->cache->writeData(this->tags[i], numerical_index);
+                    this->cycles_per_instruction.push_back(this->access_time);
+                }
+                else
+                {
+                    this->events.push_back("Hit");
+                    this->hits++;
+                    this->total_cycles;
+                    this->cycles_per_instruction.push_back(this->access_time);
+                }
+            }
+        }
+        else
+        {
+            if (this->tags[i].compare(this->cache->getTag(numerical_index)) != 0)
+            {
+                this->misses++;
+                this->total_cycles++;
+                this->events.push_back("Miss");
+                this->cycles_per_instruction.push_back(this->access_time);
+            }
+            else
+            {
+                this->hits++;
+                this->total_cycles++;
+                this->events.push_back("Hit");
+                this->cycles_per_instruction.push_back(this->access_time);
+            }
+        }
     }
 }
 /**
@@ -259,18 +310,33 @@ void Simulator::run()
     readFromFile();
     separateInstruction();
     processInstruction();
+    write();
     print_Results();
-    //separateInstruction();
 }
 
-/**
+/**this->total_cycles
  * @brief prints using the results using the standart output 
  */
 void Simulator::print_Results()
 {
-    std::cout << "Instructions \t Cycles \t Events" << std::endl;
-    for (auto value : this->tokens)
+    long sum = 0;
+    if (getCacheType() == 0)
     {
-        std::cout << value << std::endl;
+        std::cout << "Simulated for a Direct Mapped Cache" << std::endl;
     }
+    else
+    {
+        std::cout << "Simulated for a Fully Associative Cache" << std::endl;
+    }
+
+    std::cout << "\nInstructions \t Cycles \t Events" << std::endl;
+    for (size_t i = 0; i != this->instruction_operations.size(); ++i)
+    {
+        std::cout << this->tokens[i] << "\t\t" << this->cycles_per_instruction[i] << "\t\t" << this->events[i] << std::endl;
+        sum += this->cycles_per_instruction[i];
+    }
+    std::cout << "\n==============================" << std::endl;
+    std::cout << "Total Cycles: " << sum << std::endl; //Determinar cuando se baja al siguiente nivel de la cache
+    std::cout << "Total Hits: " << this->hits << std::endl;
+    std::cout << "Total Misses. " << this->misses << std::endl;
 }

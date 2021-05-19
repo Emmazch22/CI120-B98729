@@ -1,4 +1,0 @@
-L 011abffe,8
-S 011abffe,6
-L 0366ffec,5
-S 0366ffec,8

@@ -1,6 +1,20 @@
 #include "../include/Simulator.h"
 
-Simulator::Simulator() {}
+Simulator::Simulator()
+{
+    this->sets = 0;
+    this->blocks = 0;
+    this->k_bytes = 0;
+    this->strategy_one = -1;
+    this->strategy_two = -1;
+    this->access_time = 0;
+    this->algorithm = -1;
+    this->next_level_access = 0;
+    this->hits = 0;
+    this->misses = 0;
+    this->total_instructions = 0;
+    this->file = "";
+}
 
 Simulator::Simulator(size_t sets, size_t blocks, size_t k_bytes, size_t strategy_one, size_t strategy_two, size_t algorithm, size_t access_time, size_t next_level_access, std::string file)
 {
@@ -10,26 +24,19 @@ Simulator::Simulator(size_t sets, size_t blocks, size_t k_bytes, size_t strategy
     this->strategy_one = strategy_one;
     this->strategy_two = strategy_two;
     this->access_time = access_time;
+    this->algorithm = algorithm;
     this->next_level_access = next_level_access;
     this->hits = 0;
     this->misses = 0;
-    this->total_cycles = 0;
     this->total_instructions = 0;
     this->file = file;
     this->cache = new Cache(sets, blocks);
     this->cache->setType(getCacheType());
-    this->main_memory = new Main_Memory(blocks);
 }
 
 Simulator::~Simulator()
 {
-    this->tokens.clear();
-    this->instructions.clear();
-    this->binary_instructions.clear();
-    this->instruction_operations.clear();
-    this->offsets.clear();
-    this->indexes.clear();
-    this->tags.clear();
+    delete this->cache;
 }
 
 /**
@@ -45,7 +52,7 @@ void Simulator::setCacheType(size_t sets, size_t blocks)
     }
     else if (sets == 1 && blocks >= 1)
     {
-        this->cache_type = 2; /* fully-asociative */
+        this->cache_type = 1; /* fully-asociative */
     }
 }
 /**
@@ -97,16 +104,15 @@ void Simulator::processInstruction()
     size_t offset_size;
     size_t index_size;
     size_t tag_size;
-    size_t counter = 0;
     std::string temp = "";
     //Getting the operations of the instruction, and saving them into a vector
     for (auto value : this->tokens)
     {
-        if (value.at(0) == 'L' || value.at(0) == 'L')
+        if ( (value.at(0) == 'L') || (value.at(0) == 'l') )
         {
             this->instruction_operations.push_back(0);
         }
-        else if (value.at(0) == 'S' || value.at(0) == 's')
+        else if ( (value.at(0) == 'S') || (value.at(0) == 's') )
         {
             this->instruction_operations.push_back(1);
         }
@@ -240,9 +246,9 @@ void Simulator::directMappedWrite()
             if (this->cache->isValid(numerical_index) == 0)
             {
                 this->misses++;
-                this->total_cycles++;
                 this->events.push_back("Miss");
                 this->cache->writeData(this->tags[i], numerical_index);
+                //As a write through the data is written in the next level
                 this->cycles_per_instruction.push_back(this->next_level_access + this->access_time);
             }
             else
@@ -251,7 +257,6 @@ void Simulator::directMappedWrite()
                 {
                     this->events.push_back("Miss");
                     this->misses++;
-                    this->total_cycles++;
                     //replaces the tag at the cache index
                     this->cache->writeData(this->tags[i], numerical_index);
                     this->cycles_per_instruction.push_back(this->access_time);
@@ -260,26 +265,25 @@ void Simulator::directMappedWrite()
                 {
                     this->events.push_back("Hit");
                     this->hits++;
-                    this->total_cycles;
                     this->cycles_per_instruction.push_back(this->access_time);
                 }
             }
         }
-        else
+        else //If the operation is a store
         {
+            //Compare the tags to determinate if the data is in the cache
             if (this->tags[i].compare(this->cache->getTag(numerical_index)) != 0)
             {
+
                 this->misses++;
-                this->total_cycles++;
                 this->events.push_back("Miss");
                 this->cycles_per_instruction.push_back(this->access_time);
             }
             else
             {
                 this->hits++;
-                this->total_cycles++;
                 this->events.push_back("Hit");
-                this->cycles_per_instruction.push_back(this->access_time);
+                this->cycles_per_instruction.push_back(this->next_level_access + this->access_time);
             }
         }
     }
@@ -289,6 +293,76 @@ void Simulator::directMappedWrite()
  */
 void Simulator::fullyAssociativeWrite()
 {
+    std::vector<std::string> instruction_array;
+    instruction_array = this->tags;
+    size_t position = -1;
+
+    srand(time(NULL));
+    //To get the least recently used block of memory
+    std::queue<size_t> lru_index;
+    //Push all the valid positions of the cache, to get the lru
+    for (size_t i = 0; i < this->blocks; ++i)
+    {
+        lru_index.push(i);
+    }
+    //In the fully associative cache there is no index
+    for (size_t i = 0; i != instruction_array.size(); ++i)
+    {
+        instruction_array[i].append(this->indexes[i]);
+    }
+    for (size_t i = 0; i != this->instruction_operations.size(); ++i)
+    {
+        //If the instruction is a load
+        if (this->instruction_operations[i] == 0)
+        {
+            if (this->cache->searchInCache(instruction_array[i]) == 0)
+            {
+                this->misses++;
+                this->events.push_back("Miss");
+                if (this->algorithm == 0)
+                {
+                    //LRU
+                    position = lru_index.back();
+                    lru_index.push(position);
+                }
+                else if (this->algorithm == 1)
+                {
+                    //FIFO
+                    position++;
+                }
+                else
+                {
+                    //RANDOM
+                    position = (size_t)rand() % (this->sets * this->blocks);
+                }
+                this->cache->writeData(instruction_array[i], position);
+                this->cycles_per_instruction.push_back(this->access_time + this->next_level_access);
+            }
+            else
+            {
+                this->hits++;
+                this->events.push_back("Hit");
+                this->cycles_per_instruction.push_back(this->access_time);
+            }
+        }
+        else //If the operation is a store
+        {
+            //Search the data in the cache
+            if (this->cache->searchInCache(instruction_array[i]) == 1)
+            {
+                this->hits++;
+                this->events.push_back("Hit");
+                //The data is also written in the next level
+                this->cycles_per_instruction.push_back(this->access_time + this->next_level_access);
+            }
+            else
+            {
+                this->misses++;
+                this->events.push_back("Miss");
+                this->cycles_per_instruction.push_back(this->access_time);
+            }
+        }
+    }
 }
 
 /**
@@ -314,7 +388,7 @@ void Simulator::run()
     print_Results();
 }
 
-/**this->total_cycles
+/**
  * @brief prints using the results using the standart output 
  */
 void Simulator::print_Results()

@@ -1,9 +1,9 @@
 #pragma once
 #include "Cache.h"
-#include "Main_Memory.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <queue>
 #include <unistd.h>
 #include <string.h>
 #include <math.h>
@@ -11,7 +11,6 @@
 class Simulator {
     private:
         Cache * cache;
-        Main_Memory * main_memory;
         size_t sets;
         size_t blocks;
         size_t k_bytes;
@@ -24,7 +23,6 @@ class Simulator {
         size_t next_level_access;
         size_t misses;
         size_t hits;
-        size_t total_cycles;
         size_t evictions;
         size_t total_instructions;
         std::string file;

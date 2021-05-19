@@ -42,13 +42,13 @@ int main(int argc, char *argv[])
         blocks = (size_t)strtoul(argv[2], NULL, 10);
         k_bytes = (size_t)strtoul(argv[3], NULL, 10);
 
-        if (!isPowerOfTwo(sets) || !isPowerOfTwo(blocks) || !isPowerOfTwo(k_bytes) || !k_bytes >= 4)
+        if (!isPowerOfTwo(sets) || !isPowerOfTwo(blocks) || !isPowerOfTwo(k_bytes) || k_bytes < 4)
         {
             cout << "Error, Invalid parameters, the numerical arguments must be power of two, non negatives." << endl;
             exit(0);
         }
 
-        if (getStrategy(argv[4]) == -1 || getStrategy(argv[5]) == -1)
+        if (getStrategy(argv[4]) == (size_t)-1 || getStrategy(argv[5]) == (size_t)-1)
         {
             cout << "Error, Invalid strategy" << endl;
             exit(0);

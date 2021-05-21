@@ -27,7 +27,8 @@ Para la ejecución del simulador se debe de ingresar el siguiente comando:
 ```
 ./cache_simulator <sets> <blocks> <bytes> <strategy one> <strategy two> <replacement algorithm> <access time (cycles)> <next level access time(cyles)> <file>
 ```
-A continuación se explicada cada parámetro:
+A continuación se explica cada parámetro:
+
 	- **sets:** Cantidad de conjuntos de la cache en potencia de dos.\
 	- **blocks:** Cantidad de bloques por conjunto en potencia de dos.\
 	- **bytes:** Tamaño en bytes de la cache, mayor o igual a 4.\
@@ -84,8 +85,8 @@ Total Misses. 1
 
 En esta etapa del proyecto solo es funcional una memoria cache con las siguientes configuraciones:
 
-1.“direct-mapped”, “write-through” y “no-write allocate”\
-2.“fully associative”, “write-through” y “no-write-allocate”
+1. “direct-mapped”, “write-through” y “no-write allocate”\
+2. “fully associative”, “write-through” y “no-write-allocate”
 
 Por lo tanto, valores necesarios para el funcionamiento de otras configuraciones no son considerados en esta solución. Por ejemplo evicted o dirty...
 

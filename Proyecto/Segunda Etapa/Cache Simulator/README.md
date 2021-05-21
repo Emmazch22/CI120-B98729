@@ -27,16 +27,15 @@ Para la ejecución del simulador se debe de ingresar el siguiente comando:
 ```
 ./cache_simulator <sets> <blocks> <bytes> <strategy one> <strategy two> <replacement algorithm> <access time (cycles)> <next level access time(cyles)> <file>
 ```
-A continuación se explica cada parámetro:
-
-	- **sets:** Cantidad de conjuntos de la cache en potencia de dos.\
-	- **blocks:** Cantidad de bloques por conjunto en potencia de dos.\
-	- **bytes:** Tamaño en bytes de la cache, mayor o igual a 4.\
-	- **strategy one:** Politica de escritura 1 (write-through o no-write allocate).\
-	- **strategy two:** Politica de escritura 2 (write-through o no-write allocate).\
-	- **replacement algorithm:** Politica de reemplazo en la cache (lru, fifo o random).\
-	- **access time:** Tiempo T que tarda en realizar un ciclo.\
-	- **next level acces:** Tiempo Tn que tarda en acceder al siguiente nivel de la memoria.\
+A continuación se explica cada parámetro:\
+	- **sets:** Cantidad de conjuntos de la cache en potencia de dos.
+	- **blocks:** Cantidad de bloques por conjunto en potencia de dos.
+	- **bytes:** Tamaño en bytes de la cache, mayor o igual a 4.
+	- **strategy one:** Politica de escritura 1 (write-through o no-write allocate).
+	- **strategy two:** Politica de escritura 2 (write-through o no-write allocate).
+	- **replacement algorithm:** Politica de reemplazo en la cache (lru, fifo o random).
+	- **access time:** Tiempo T que tarda en realizar un ciclo.
+	- **next level acces:** Tiempo Tn que tarda en acceder al siguiente nivel de la memoria.
 	- **file:** Archivo de traza (el formato de los archivos se explican más adelante).
 
 Un ejemplo de ejecucíón seria el siguiente:

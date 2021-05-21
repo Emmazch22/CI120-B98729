@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
         cout << "Usage: ./simulator.out <sets> <blocks> <bytes> <strategy one> <strategy two> <replacement algorithm> <access time (cycles)> <next level access time(cyles)> <file>" << endl;
         exit(0);
     }
-    Simulator simulator(sets, blocks, k_bytes, strategyOne, strategyTwo, algorithm, access_time, next_level_access,file);
+    Simulator simulator(sets, blocks, k_bytes, strategyOne, strategyTwo, algorithm, access_time, next_level_access, file);
     simulator.run();
 
     return 0;
@@ -102,19 +102,19 @@ bool isPowerOfTwo(size_t n)
 size_t getStrategy(string strategy)
 {
     size_t result = -1;
-    if ( strategy.compare(no_write_allocate) == 0)
+    if (strategy.compare(no_write_allocate) == 0)
     {
         result = 0;
     }
-    else if ( strategy.compare(write_allocate) == 0)
+    else if (strategy.compare(write_allocate) == 0)
     {
         result = 1;
     }
-    else if ( strategy.compare(write_through) == 0)
+    else if (strategy.compare(write_through) == 0)
     {
         result = 2;
     }
-    else if ( strategy.compare(write_back) == 0)
+    else if (strategy.compare(write_back) == 0)
     {
         result = 3;
     }
@@ -129,15 +129,15 @@ size_t getStrategy(string strategy)
 size_t getAlgorithm(string algorithm)
 {
     size_t result = -1;
-    if ( algorithm.compare(least_recently_used) == 0)
+    if (algorithm.compare(least_recently_used) == 0)
     {
         result = 0;
     }
-    else if ( algorithm.compare(first_in_first_out) == 0)
+    else if (algorithm.compare(first_in_first_out) == 0)
     {
         result = 1;
     }
-    else if ( algorithm.compare(random_s) == 0)
+    else if (algorithm.compare(random_s) == 0)
     {
         result = 2;
     }

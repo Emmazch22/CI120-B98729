@@ -108,11 +108,11 @@ void Simulator::processInstruction()
     //Getting the operations of the instruction, and saving them into a vector
     for (auto value : this->tokens)
     {
-        if ( (value.at(0) == 'L') || (value.at(0) == 'l') )
+        if ((value.at(0) == 'L') || (value.at(0) == 'l'))
         {
             this->instruction_operations.push_back(0);
         }
-        else if ( (value.at(0) == 'S') || (value.at(0) == 's') )
+        else if ((value.at(0) == 'S') || (value.at(0) == 's'))
         {
             this->instruction_operations.push_back(1);
         }

@@ -93,3 +93,5 @@ Por lo tanto, valores necesarios para el funcionamiento de otras configuraciones
 Para escoger una cache con configuración direct mapped deben de haber N conjuntos de un bloque cada uno. Por otro lado, para una cache fully associative debe de haber un conjunto de N bloques.
 
 La Cache no simula un nivel en especifico, no obstante sea asume que la cache puede escribir datos en los siguientes niveles por esto se escoge un tiempo de acceso al siguiente nivel.
+
+El simulador no funciona con la instrucción Modify 'M' (pues no fue programada) por lo tanto archivos de traza que presenten dicha instrucción no serviran para el simulador. Por otro lado, como se mencionó anteriormente el Simulador funciona especificamente con instrucciones de 32 bits (8 bytes) con el formato explicado anteriormente, por lo tanto si se presenta alguna instrucción que sobrepase dicha extensión pueden presentarse resultados incoherentes.
